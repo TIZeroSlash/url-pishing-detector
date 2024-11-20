@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>URL Shortener with Phishing Detector</title>
 <link rel="stylesheet" href="/static/style.css">
+<script>
+    // Fungsi untuk menyembunyikan elemen pesan setelah 5 detik
+    window.onload = function() {
+        setTimeout(function() {
+            var messageElement = document.getElementById("message");
+            if (messageElement) {
+                messageElement.style.display = "none";
+            }
+        }, 5000);
+    };
+</script>
 </head>
 <body>
     <div class="container">
@@ -13,14 +24,19 @@
             <input type="url" name="url" placeholder="Enter your URL" required>
             <button type="submit">Shorten URL</button>
         </form>
-        
+
         {% if short_url %}
             <p>Shortened URL: <a href="{{ short_url }}" target="_blank">{{ short_url }}</a></p>
         {% endif %}
-        
+
+        {% if stats_url %}
+            <p>Stats URL: <a href="{{ stats_url }}" target="_blank">{{ stats_url }}</a></p>
+        {% endif %}
+
         {% if message %}
-            <p style="color: red;">{{ message }}</p>
+            <div id="message" style="color: red; margin-top: 10px;">{{ message }}</div>
         {% endif %}
     </div>
 </body>
 </html>
+=

@@ -6,10 +6,16 @@ import os
 from dotenv import load_dotenv
 from datetime import datetime
 
+# Konfigurasi logging for debugging
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+
 app = Flask(__name__)
 
 # Load konfigurasi dari .env
-load_dotenv()
+#load_dotenv()
+dotenv_path = os.path.join(os.path.dirname(__file__), '.env') #use absolute path
+load_dotenv(dotenv_path)
+
 API_KEY = os.getenv('GOOGLE_API_KEY')
 SAFE_BROWSING_URL = f'https://safebrowsing.googleapis.com/v4/threatMatches:find?key={API_KEY}'
 
@@ -35,10 +41,17 @@ def check_phishing(url):
     try:
         response = requests.post(SAFE_BROWSING_URL, json=payload)
         result = response.json()
+        # Log response status dan text ke log server
+        logging.info(f"Checking URL: {url}")
+        logging.info(f"Response Status Code: {response.status_code}")
+        logging.info(f"Response Text: {response.text}")
+        
         if 'matches' in result:
             return True
     except Exception as e:
         print(f"Error checking phishing: {e}")
+        # Log error jika terjadi masalah
+        logging.error(f"Error checking phishing for URL {url}: {e}")
         return False
     return False
 
